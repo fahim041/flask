@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify
 import os
 from flask_jwt_extended import JWTManager
+from src.constants.http_status_code import HTTP_404_NOT_FOUND
 
 from src.database import db
 from src.auth import auth
@@ -32,5 +33,9 @@ def create_app(test_config=None):
     @app.get('/')
     def index():
         return 'Homepage'
+
+    @app.errorhandler(HTTP_404_NOT_FOUND)
+    def handle_404(e):
+        return jsonify({'error': 'Not Found'}), HTTP_404_NOT_FOUND
 
     return app
